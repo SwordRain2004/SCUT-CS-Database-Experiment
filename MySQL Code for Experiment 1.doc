@@ -1,0 +1,117 @@
+drop database if exists experiment1;
+CREATE DATABASE if not exists experiment1;
+
+use experiment1;
+-- (1)
+CREATE TABLE Student(
+	ID VARCHAR (20) COMMENT 'Student\'s ID',
+	Name VARCHAR (10) COMMENT 'Student\'s Name',
+	Age INT COMMENT 'Student\'s Age',
+	Department VARCHAR(30) COMMENT 'Student\'s Dept'
+);
+-- (2)
+CREATE TABLE Course(
+	CourseID VARCHAR (15) COMMENT 'Course\'s ID',
+	CourseName VARCHAR (30) COMMENT 'Course\'s Name',
+	CourseBefore VARCHAR (15) NOT NULL DEFAULT '-' COMMENT 'Previous Course'
+);
+-- (3)
+CREATE TABLE Choose(
+	ID VARCHAR (20) COMMENT 'Student\'s ID',
+	CourseID VARCHAR (15) COMMENT 'Course\'s ID',
+	Score DECIMAL (5,2) COMMENT 'Student\'s Score'
+);
+
+-- (4)
+INSERT INTO Student (ID, Name, Age, Department)
+VALUES('00001', 'ZhangSan', 20, 'Computer Science');
+
+INSERT INTO Student (ID, Name, Age, Department)
+VALUES('00002', 'LiSi', 19, 'Computer Science'); 
+
+INSERT INTO Student (ID, Name, Age, Department)
+VALUES('00003', 'WangWu', 21, 'Computer Science');
+
+-- (5)
+INSERT INTO Course (CourseID, CourseName)
+VALUES('C1','Introduction to Computer');
+
+INSERT INTO Course (CourseID, CourseName, CourseBefore)
+VALUES('C2','PASCAL Programming Language', 'C1');
+
+INSERT INTO Course (CourseID, CourseName, CourseBefore)
+VALUES('C3','Data Structure', 'C2');
+
+-- (6)
+INSERT INTO Choose (ID, CourseID, Score)
+VALUES('00001','C1',95);
+
+INSERT INTO Choose (ID, CourseID, Score)
+VALUES('00001','C2',80);
+
+INSERT INTO Choose (ID, CourseID, Score)
+VALUES('00001','C3',84);
+
+INSERT INTO Choose (ID, CourseID, Score)
+VALUES('00002','C1',80);
+
+INSERT INTO Choose (ID, CourseID, Score)
+VALUES('00002','C2',85);
+
+INSERT INTO Choose (ID, CourseID, Score)
+VALUES('00003','C1',78);
+
+INSERT INTO Choose (ID, CourseID, Score)
+VALUES('00003','C3',70);
+
+-- (7)
+SELECT ID, Name
+FROM Student
+WHERE Department = 'Computer Science';
+
+-- (8)
+SELECT s.ID, s.Name, c.CourseName, ch.Score
+FROM Student s
+INNER JOIN Choose ch ON s.ID = ch.ID
+INNER JOIN Course c ON ch.CourseID = c.CourseID
+order by s.ID, CourseName;
+
+-- (9)
+SELECT *
+FROM Student
+order by ID desc;
+
+-- (10)
+SELECT s.ID, s.Name, avg(ch.Score) 'Average Score'
+FROM Student s 
+INNER JOIN Choose ch ON s.ID = ch.ID
+group by s.ID, s.Name;
+
+-- (11)
+SELECT s.ID, s.Name, count(ch.ID) 'Number of Courses'
+FROM Student s 
+INNER JOIN Choose ch ON s.ID = ch.ID
+group by s.ID, s.Name;
+
+-- (12)
+SELECT ch.CourseID, co.CourseName, COUNT(ch.CourseID) Student_Number
+FROM Choose ch
+INNER JOIN Course co ON ch.CourseID = co.CourseID
+GROUP BY ch.CourseID, co.CourseName;
+
+-- (13)
+SELECT s.ID Student_ID
+FROM Student s
+INNER JOIN Choose ch ON s.ID = ch.ID
+WHERE ch.CourseID = 'C1' and ch.Score > 80;
+
+-- (14)
+SELECT s.ID Student_ID
+FROM Student s
+INNER JOIN Choose ch ON s.ID = ch.ID
+WHERE ch.CourseID = 'C2';
+
+-- (15)
+SELECT Department, avg(age)
+from Student
+group by Department;
