@@ -20,3 +20,5 @@
   Database Design Document.docx
   
   Program Manual.docx
+
+下学期的大作业和实验2类似，可以直接按照这个模板去做
